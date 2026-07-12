@@ -1,0 +1,51 @@
+common:
+  save_config: false
+
+sim_logger:
+  animation_enabled: false
+
+map:
+  yaml_path: "env/final_ver3/occupancy_grid_map.yaml"
+
+reference_path:
+  csv_path: "env/final_ver3/traj_mincurv.csv"
+  resolution: 0.6
+  smoothing_distance: 2
+  max_width: 6.0
+  circular: true
+
+bicycle_model:
+  length: 1.087
+  width: 2.30
+
+mpc:
+  N: 20
+  R: [100000.0, 0.0]
+  a_min: -1.6
+  a_max: 0.7
+  delta_max_deg: 32.0
+  steer_rate_max: 0.35
+  control_rate: 40.0
+  steering_tire_angle_gain_var: 1.639
+  accel_low_pass_gain: 1.0
+  steer_low_pass_gain: 1.0
+  wp_id_offset: 2
+  use_max_kappa_pred: true
+
+  # ULTIMATE PERFORMANCE PROFILE
+  v_max: 30.0
+  ay_max: 12.0
+  Q: [600000.0, 100000000.0, 2000000.0]
+  QN: [1000000.0, 1000000.0, 10000.0]
+
+ref_vel_configulator:
+  s1: { ref_vel: 30.0, wp_id: 1 }
+  s1_1: { ref_vel: 30.0, wp_id: 30 }
+  s2: { ref_vel: 30.0, wp_id: 55 }
+  s3: { ref_vel: 30.0, wp_id: 100 }
+  s4: { ref_vel: 28.0, wp_id: 155 } # Increased from 22
+  s5: { ref_vel: 30.0, wp_id: 190 }
+  s6: { ref_vel: 28.0, wp_id: 265 } # Increased from 22
+  s7: { ref_vel: 30.0, wp_id: 290 }
+  s8: { ref_vel: 28.0, wp_id: 320 } # Increased from 25
+  s9: { ref_vel: 30.0, wp_id: 335 }
