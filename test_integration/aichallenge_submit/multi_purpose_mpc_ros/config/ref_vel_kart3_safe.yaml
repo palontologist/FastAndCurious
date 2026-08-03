@@ -1,0 +1,37 @@
+ref_vel_configulator:
+  s0:
+    ref_vel: 12.0
+    wp_id: 1
+  s1:
+    ref_vel: 14.0
+    wp_id: 8
+  s2:
+    ref_vel: 16.0
+    wp_id: 15
+  s3:
+    ref_vel: 17.0
+    wp_id: 30
+  s4:
+    ref_vel: 17.0
+    wp_id: 55
+  s5:
+    ref_vel: 17.0
+    wp_id: 100
+  s6:
+    ref_vel: 14.0
+    wp_id: 155
+  s7:
+    ref_vel: 17.0
+    wp_id: 190
+  s8:
+    ref_vel: 14.0
+    wp_id: 265
+  s9:
+    ref_vel: 17.0
+    wp_id: 290
+  s10:
+    ref_vel: 14.0
+    wp_id: 320
+  s11:
+    ref_vel: 17.0
+    wp_id: 335

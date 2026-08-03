@@ -127,8 +127,8 @@
     <group>
       <push-ros-namespace namespace="scenario_planning"/>
 
-      <!-- Customizable: all vehicles use centerline raceline -->
-      <let name="lateral_offset_var" value="$(eval '0.0 if \'$(var vehicle_id)\' == \'1\' else (0.0 if \'$(var vehicle_id)\' == \'2\' else -0.8)')" />
+      <!-- Vehicle-separated racelines for stability in multi-kart races -->
+      <let name="lateral_offset_var" value="$(eval '0.0 if \'$(var vehicle_id)\' == \'1\' else (0.35 if \'$(var vehicle_id)\' == \'2\' else -0.35)')" />
       <node pkg="simple_trajectory_generator" exec="simple_trajectory_generator_node" name="simple_trajectory_generator" output="screen">
             <param name="csv_path" value="$(find-pkg-share simple_trajectory_generator)/data/$(var track_subdir)raceline_awsim_30km_from_garage.csv"/>
             <param name="z" value="6.5"/>
@@ -150,6 +150,7 @@
     <include file="$(find-pkg-share aichallenge_submit_launch)/launch/control/mpc.launch.xml">
       <arg name="use_sim_time" value="$(var use_sim_time)"/>
       <arg name="track" value="$(var track)"/>
+      <arg name="vehicle_id" value="$(var vehicle_id)"/>
     </include>
   </group>
 
