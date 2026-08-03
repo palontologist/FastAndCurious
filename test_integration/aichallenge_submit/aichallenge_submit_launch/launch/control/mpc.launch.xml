@@ -2,11 +2,15 @@
 <launch>
   <arg name="use_sim_time" default="true"/>
   <arg name="use_obstacle_avoidance" default="false"/>
+  <arg name="track" default="citycircuit"/>
+  <arg name="vehicle_id" default="1"/>
+  <let name="config_path_var" value="$(eval '&quot;$(find-pkg-share multi_purpose_mpc_ros)/config/config_kashiwanoha.yaml&quot; if &quot;$(var track)&quot; == &quot;kashiwanoha&quot; else &quot;$(find-pkg-share multi_purpose_mpc_ros)/config/config.yaml&quot;')" />
+  <let name="ref_vel_path_var" value="$(eval '&quot;$(find-pkg-share multi_purpose_mpc_ros)/config/ref_vel_kashiwanoha.yaml&quot; if &quot;$(var track)&quot; == &quot;kashiwanoha&quot; else (&quot;$(find-pkg-share multi_purpose_mpc_ros)/config/ref_vel.yaml&quot; if &quot;$(var vehicle_id)&quot; == &quot;1&quot; else (&quot;$(find-pkg-share multi_purpose_mpc_ros)/config/ref_vel_kart2_safe.yaml&quot; if &quot;$(var vehicle_id)&quot; == &quot;2&quot; else &quot;$(find-pkg-share multi_purpose_mpc_ros)/config/ref_vel_kart3_safe.yaml&quot;))')" />
 
   <node pkg="multi_purpose_mpc_ros" exec="run_mpc_controller.bash"
         name="mpc_controller" output="screen"
-        args="--config_path $(find-pkg-share multi_purpose_mpc_ros)/config/config.yaml
-              --ref_vel_path $(find-pkg-share multi_purpose_mpc_ros)/config/ref_vel.yaml">
+        args="--config_path $(var config_path_var)
+              --ref_vel_path $(var ref_vel_path_var)">
     <param name="use_sim_time" value="$(var use_sim_time)"/>
     <param name="use_boost_acceleration" value="false"/>
     <param name="use_obstacle_avoidance" value="$(var use_obstacle_avoidance)"/>
