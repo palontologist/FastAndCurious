@@ -44,10 +44,10 @@ mpc:
   # R: [v, delta]
   # QN: [e_y, e_psi, t]
   R: [100000.0, 0.0]
-  a_min: -2.0 # m/s^2 - hard braking
-  a_max: 1.8  # m/s^2 - DOM launch + power out
+  a_min: -1.6 # m/s^2
+  a_max: 1.0 # m/s^2
   delta_max_deg: 32.0 # degrees
-  steer_rate_max: 0.55 # rad/s - counter-steer speed
+  steer_rate_max: 0.45 # rad/s
   control_rate: 40.0 # Hz
   steering_tire_angle_gain_var: 1.639
   # steering_tire_angle_gain_var: 1.0
@@ -58,11 +58,12 @@ mpc:
   wp_id_offset: 0
   use_max_kappa_pred: true
 
-  ## --------- TOKYO DRIFT DOM V2 (consistent) ----------- ##
-  v_max: 26.0
-  ay_max: 8.5
-  Q: [1200000.0, 100000000.0, 150000.0]  # tighter lateral = less drift variance
-  QN: [1200000.0, 3000.0, 30000.0]
+  ## Balanced fast profile for all karts
+  v_max: 28.0   # km/h
+  ay_max: 10.0  # m/s^2, maximum lateral acceleration in curves
+  Q: [900000.0, 100000000.0, 750000.0]
+  QN: [1000000.0, 1000000.0, 10000.0]
+
 v2x_obstacle_avoidance:
   vehicle_radius: 0.5          # [m]
   v_max_safety: 30.0           # [m/s]
