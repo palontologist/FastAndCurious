@@ -22,9 +22,9 @@ mpc:
   N: 20
   R: [100000.0, 0.0]
   a_min: -1.6
-  a_max: 1.0
+  a_max: 1.2
   delta_max_deg: 32.0
-  steer_rate_max: 0.45
+  steer_rate_max: 0.50
   control_rate: 40.0
   steering_tire_angle_gain_var: 1.639
   accel_low_pass_gain: 1.0
@@ -32,10 +32,10 @@ mpc:
   wp_id_offset: 0
   use_max_kappa_pred: true
 
-  # Balanced fast profile for all karts
-  v_max: 28.0
-  ay_max: 10.0
-  Q: [900000.0, 100000000.0, 750000.0]
+  # Fast straights, sharper curve control
+  v_max: 30.0
+  ay_max: 11.5
+  Q: [1000000.0, 100000000.0, 900000.0]
   QN: [1000000.0, 1000000.0, 10000.0]
 
 ref_vel_configulator:
@@ -43,9 +43,9 @@ ref_vel_configulator:
   s1_1: { ref_vel: 30.0, wp_id: 30 }
   s2: { ref_vel: 30.0, wp_id: 55 }
   s3: { ref_vel: 30.0, wp_id: 100 }
-  s4: { ref_vel: 29.0, wp_id: 155 }
+  s4: { ref_vel: 28.0, wp_id: 155 }
   s5: { ref_vel: 30.0, wp_id: 190 }
-  s6: { ref_vel: 29.0, wp_id: 265 }
+  s6: { ref_vel: 28.0, wp_id: 265 }
   s7: { ref_vel: 30.0, wp_id: 290 }
-  s8: { ref_vel: 29.0, wp_id: 320 }
+  s8: { ref_vel: 28.0, wp_id: 320 }
   s9: { ref_vel: 30.0, wp_id: 335 }

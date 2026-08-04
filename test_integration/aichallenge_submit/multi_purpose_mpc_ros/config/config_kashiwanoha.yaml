@@ -45,9 +45,9 @@ mpc:
   # QN: [e_y, e_psi, t]
   R: [100000.0, 0.0]
   a_min: -1.6 # m/s^2
-  a_max: 1.0 # m/s^2
+  a_max: 1.2 # m/s^2
   delta_max_deg: 32.0 # degrees
-  steer_rate_max: 0.45 # rad/s
+  steer_rate_max: 0.50 # rad/s
   control_rate: 40.0 # Hz
   steering_tire_angle_gain_var: 1.639
   # steering_tire_angle_gain_var: 1.0
@@ -59,9 +59,9 @@ mpc:
   use_max_kappa_pred: true
 
   ## ---------- 究極 ------------- ##
-  v_max: 28.0
-  ay_max: 10.0
-  Q: [900000.0, 100000000.0, 750000.0]
+  v_max: 30.0
+  ay_max: 11.5
+  Q: [1000000.0, 100000000.0, 900000.0]
   QN: [1000000.0, 1000000.0, 10000.0]
 
 v2x_obstacle_avoidance:
