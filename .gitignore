@@ -1,0 +1,44 @@
+# Packaged submissions (rebuild with create_submission.sh / fixed_submission.sh)
+*.tar.gz
+*.zip
+
+# Duplicate submission trees - test_integration/aichallenge_submit is the source of truth
+/aichallenge_submit/
+/aichallenge_submit_launch/
+/analysis_dom/
+/analysis_submission_dir/
+/analysis_winner/
+/domm/
+/extracted_submission/
+/final_submission*/
+/fixed_submission*/
+/github_final_submission/
+/other_files/
+/submission_72s/
+/submission_dom_torreto_43s/
+/submission_github_final/
+/tmp_sample/
+/multi_purpose_mpc_ros/
+/simple_pure_pursuit/
+/simple_trajectory_generator/
+/path_to_trajectory/
+/pilot_net_controller/
+/tiny_lidar_net_controller/
+/gyro_odometer/
+/imu_corrector/
+/imu_gnss_poser/
+/laserscan_generator/
+/racing_kart_description/
+/racing_kart_gnss_poser/
+/racing_kart_sensor_kit_description/
+/multi_purpose_mpc_ros_msgs/
+
+# Sim logs and captures
+autoware*.log
+*.mcap
+
+# Scratch
+/tmp_*/
+__pycache__/
+*.pyc
+.pytest_cache/

@@ -480,6 +480,17 @@ class MPCController(Node):
         self._last_condition = None
         self._last_colliding_time = None
 
+        # per-lap telemetry
+        self._lap_speed_sum = 0.0
+        self._lap_speed_count = 0
+        self._lap_speed_min = None
+        self._lap_speed_max = 0.0
+        self._lap_stuck_time = 0.0
+        self._lap_collision_count = 0
+        self._stuck_start_time = None
+        self.STUCK_SPEED_KMH = 3.0
+        self.STUCK_MIN_DURATION = 2.0
+
         # stats
         self._stats = ExecutionStats(self.get_logger(), window_size=50, record_count_threshold=1000)
 
@@ -630,9 +641,27 @@ class MPCController(Node):
             self._current_laps = 1 if laps == 0 else laps
 
         if laps > self._current_laps:
-            self.get_logger().info(f'\033[32mLap {self._current_laps} completed! Lap time: {self._last_lap_time} s\033[0m')
+            mean_speed = self._lap_speed_sum / self._lap_speed_count if self._lap_speed_count else 0.0
+            min_speed = self._lap_speed_min if self._lap_speed_min is not None else 0.0
+            stuck_pct = 100.0 * self._lap_stuck_time / self._last_lap_time if self._last_lap_time > 0 else 0.0
+            self.get_logger().info(
+                f'\033[32mLap {self._current_laps} completed! Lap time: {self._last_lap_time} s\033[0m')
+            self.get_logger().info(
+                f'  lap {self._current_laps} telemetry: '
+                f'mean_speed={mean_speed:.1f} km/h '
+                f'min_speed={min_speed:.1f} km/h '
+                f'max_speed={self._lap_speed_max:.1f} km/h '
+                f'stuck={self._lap_stuck_time:.1f}s ({stuck_pct:.1f}%) '
+                f'collisions={self._lap_collision_count}')
             self._lap_times[self._current_laps] = self._last_lap_time
             self._current_laps = laps
+            self._lap_speed_sum = 0.0
+            self._lap_speed_count = 0
+            self._lap_speed_min = None
+            self._lap_speed_max = 0.0
+            self._lap_stuck_time = 0.0
+            self._lap_collision_count = 0
+            self._stuck_start_time = None
 
         self._last_lap_time = lap_time
 
@@ -643,7 +672,10 @@ class MPCController(Node):
         diff_condition = msg.data - self._last_condition
         if diff_condition > 30.0:
             self._last_colliding_time = self.get_clock().now()
-            self.get_logger().warning(f"Collision detected!")
+            self._lap_collision_count += 1
+            self.get_logger().warning(
+                f"Collision detected! lap={self._current_laps} "
+                f"total_this_lap={self._lap_collision_count}")
         self._last_condition = msg.data
 
     def _stop_request_callback(self, msg: Empty) -> None:
@@ -798,6 +830,30 @@ class MPCController(Node):
 
         pose = odom_to_pose_2d(self._odom) # type: ignore
         v = self._odom.twist.twist.linear.x
+
+        v_kmh = abs(v) * 3.6
+        self._lap_speed_sum += v_kmh
+        self._lap_speed_count += 1
+        if self._lap_speed_min is None or v_kmh < self._lap_speed_min:
+            self._lap_speed_min = v_kmh
+        if v_kmh > self._lap_speed_max:
+            self._lap_speed_max = v_kmh
+
+        if self._enable_control and v_kmh < self.STUCK_SPEED_KMH:
+            if self._stuck_start_time is None:
+                self._stuck_start_time = now
+            else:
+                stuck_elapsed = (now - self._stuck_start_time).nanoseconds / 1e9
+                if stuck_elapsed >= self.STUCK_MIN_DURATION:
+                    self._lap_stuck_time += dt
+        else:
+            if self._stuck_start_time is not None and \
+               (now - self._stuck_start_time).nanoseconds / 1e9 >= self.STUCK_MIN_DURATION:
+                self.get_logger().warning(
+                    f"STUCK lap={self._current_laps} for "
+                    f"{(now - self._stuck_start_time).nanoseconds / 1e9:.1f}s "
+                    f"at ({pose.x:.1f}, {pose.y:.1f})")
+            self._stuck_start_time = None
 
         self._car.update_states(pose.x, pose.y, pose.theta)
         # print(f"car x: {self._car.temporal_state.x}, y: {self._car.temporal_state.y}, psi: {self._car.temporal_state.psi}")
