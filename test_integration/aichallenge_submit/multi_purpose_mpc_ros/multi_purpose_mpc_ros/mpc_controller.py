@@ -710,8 +710,13 @@ class MPCController(Node):
         self._wait_until_message_received(lambda: self._odom, 'odometry', timeout)
 
     def _wait_until_trajectory_received(self, timeout: float = 30.) -> None:
-        if self._cfg.reference_path.update_by_topic:
-            self._wait_until_message_received(lambda: self._trajectory, 'trajectory', timeout)
+        if self._cfg.reference_path.update_by_topic: # type: ignore
+            try:
+                self._wait_until_message_received(lambda: self._trajectory, 'trajectory', timeout)
+            except TimeoutError:
+                self.get_logger().warn(
+                    "No trajectory received within timeout; "
+                    "falling back to csv_path reference path")
 
     def _wait_until_path_constraints_received(self, timeout: float = 30.) -> None:
         if self.USE_OBSTACLE_AVOIDANCE and self._cfg.reference_path.use_path_constraints_topic: # type: ignore
@@ -800,7 +805,7 @@ class MPCController(Node):
 
         if self._loop % 100 == 0:
             # update reference path
-            if self._cfg.reference_path.update_by_topic: # type: ignore
+            if self._cfg.reference_path.update_by_topic and self._trajectory is not None: # type: ignore
                 new_referece_path = self._create_reference_path_from_autoware_trajectory(self._trajectory)
                 if new_referece_path is not None:
                     self._car.reference_path = new_referece_path
